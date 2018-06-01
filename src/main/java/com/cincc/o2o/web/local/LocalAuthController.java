@@ -56,7 +56,7 @@ public class LocalAuthController {
 
         PersonInfo user = (PersonInfo) request.getSession().getAttribute( "user" );
         //非空判断
-        if(username != null && password != null && newPassword != null && user != null && user.getUserId()>=1 && !password.equals( newPassword ) ){
+        if(username != null && password != null && newPassword != null && user != null && user.getUserId()!=null && !password.equals( newPassword ) ){
             try{
                 //通过系统传过来的userId来从数据库获取localUser，判断是否是本人操作，即用户名和密码是否存在且匹配
                 LocalAuth localAuth = localAuthService.getLocalAuthByUserId( user.getUserId() );
@@ -170,12 +170,6 @@ public class LocalAuthController {
             modelMap.put("errMsg", "输入了错误的验证码");
             return modelMap;
         }
-        /*//验证码校验
-        if(!CodeUtil.checkVerifyCode(request)){
-            modelMap.put( "success", false );
-            modelMap.put( "errMsg", "验证码错误" );
-            return modelMap;
-        }*/
         String username = HttpServletRequestUtil.getString( request, "userName" );
         String password = HttpServletRequestUtil.getString( request, "password" );
 

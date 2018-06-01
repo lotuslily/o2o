@@ -3,6 +3,12 @@ $(function() {
     $('#submit').click(function() {
         var localAuth = {};
         var personInfo = {};
+        var password =$('#password').val();
+        var confirmPassword = $('#confirmPassword').val();
+        if(password != confirmPassword){
+            $.toast('两次密码不一致！');
+            return;
+        }
         localAuth.username = $('#username').val();
         localAuth.password = $('#password').val();
         personInfo.email = $('#email').val();

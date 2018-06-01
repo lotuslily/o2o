@@ -95,7 +95,6 @@ public class LocalAuthController {
     @ResponseBody
     private Map<String, Object> localUserRegister(HttpServletRequest request){
         Map<String, Object> modelMap = new HashMap<>();
-
         //验证码校验
         if(!CodeUtil.checkVerifyCode(request)) {
             modelMap.put( "success", false );
@@ -133,7 +132,7 @@ public class LocalAuthController {
             return modelMap;
         }
 
-        //进行本地用户注册
+        //进行本地用户注册 (根据表tb_local_auth UNIQUE KEY `UK_LOCAL_PROFILE` (`user_name`)设计，注册时的user_name不能重名否则报错）
         if(localAuth != null && localAuth.getUsername() != null && localAuth.getPassword() != null && thumbnail != null){
             try{
                 LocalAuthExecution localAuthExecution = localAuthService.registerLocalAuth( localAuth, thumbnail );

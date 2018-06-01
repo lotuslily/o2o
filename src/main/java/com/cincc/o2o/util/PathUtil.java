@@ -39,8 +39,8 @@ public class PathUtil {
      * 根据userID获取用户图片路径
      * @return
      */
-    public static String getPersonImagePath(long userId){
-        String imagePath="/upload/item/personinfo" +"/"+userId +"/";
+    public static String getPersonImagePath(){
+        String imagePath="/upload/item/personinfo"+"/";
         return imagePath.replace("/",separator);
     }
 }

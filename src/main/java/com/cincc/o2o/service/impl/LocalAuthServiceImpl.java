@@ -69,18 +69,18 @@ public class LocalAuthServiceImpl implements LocalAuthService {
             localAuth.setCreateTime(new Date());
             localAuth.setLastEditTime(new Date());
             localAuth.setPassword(MD5.getMd5(localAuth.getPassword()));
-            if (localAuth.getPersonInfo() != null && localAuth.getPersonInfo().getUserId() >=1) {
+            if (localAuth.getPersonInfo() != null && localAuth.getPersonInfo().getUserId()==null) {
                 if (thumbnail != null) {
-                    localAuth.getPersonInfo().setCreateTime(new Date());
-                    localAuth.getPersonInfo().setLastEditTime(new Date());
-                    localAuth.getPersonInfo().setEnableStatus(1);
-//                    //将用户头像放入用户所在的文件夹下
-//                    try {
-//                        addProfileImg(localAuth, thumbnail);
-//                    } catch (Exception e) {
-//                        throw new LocalAuthOperationException("addUserProfileImg error: " + e.getMessage());
-//                    }
+                    try {
+                        //将用户头像放入用户所在的文件夹下
+                        addProfileImg(localAuth, thumbnail);
+                    } catch (Exception e) {
+                        throw new LocalAuthOperationException("添加头像失败！");
+                    }
                 }
+                localAuth.getPersonInfo().setCreateTime(new Date());
+                localAuth.getPersonInfo().setLastEditTime(new Date());
+                localAuth.getPersonInfo().setEnableStatus(1);
                 try {
                     //插入用户详细信息的数据到person_info
                     PersonInfo personInfo = localAuth.getPersonInfo();
@@ -88,17 +88,11 @@ public class LocalAuthServiceImpl implements LocalAuthService {
                     if (effectedNum <= 0) {
                         throw new LocalAuthOperationException("添加用户信息失败");
                     }
-                    //将用户头像放入用户所在的文件夹下
-                    try {
-                        addProfileImg(localAuth, thumbnail);
-                    } catch (Exception e) {
-                        throw new LocalAuthOperationException("addUserProfileImg error: " + e.getMessage());
-                    }
                 } catch (Exception e) {
                     throw new LocalAuthOperationException("insertPersonInfo error: " + e.getMessage());
                 }
             }
-            // 然后在将用户注册信息插入到local_user中
+            // 然后在将用户注册信息插入到local_auth中
             int effectedNum = localAuthDao.insertLocalAuth(localAuth);
             if (effectedNum <= 0) {
                 throw new LocalAuthOperationException("帐号创建失败");
@@ -106,6 +100,7 @@ public class LocalAuthServiceImpl implements LocalAuthService {
                 return new LocalAuthExecution(LocalAuthStateEnum.SUCCESS, localAuth);
             }
         } catch (Exception e) {
+
             throw new RuntimeException("insertLocalAuth error: " + e.getMessage());
         }
     }
@@ -116,7 +111,7 @@ public class LocalAuthServiceImpl implements LocalAuthService {
      * @param thumbnail
      */
     private void addProfileImg(LocalAuth localAuth, ImageHolder thumbnail) {
-        String dest = PathUtil.getPersonImagePath(localAuth.getPersonInfo().getUserId());
+        String dest = PathUtil.getPersonImagePath();
         String profileImgAddr = ImageUtil.generateThumbnail(thumbnail, dest);
         localAuth.getPersonInfo().setProfileImg(profileImgAddr);
     }

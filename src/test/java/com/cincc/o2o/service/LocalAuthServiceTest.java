@@ -1,6 +1,7 @@
 package com.cincc.o2o.service;
 
 import com.cincc.o2o.BaseTest;
+import com.cincc.o2o.dao.PersonInfoDao;
 import com.cincc.o2o.dto.ImageHolder;
 import com.cincc.o2o.entity.LocalAuth;
 import com.cincc.o2o.entity.PersonInfo;
@@ -21,6 +22,8 @@ import static org.junit.Assert.*;
 public class LocalAuthServiceTest extends BaseTest {
     @Autowired
     LocalAuthService localAuthService;
+    @Autowired
+    PersonInfoDao personInfoDao;
 
     @Test
     public void getLocalUserByUserNameAndPwd() {
@@ -45,12 +48,13 @@ public class LocalAuthServiceTest extends BaseTest {
         InputStream is=new FileInputStream(thumbnailFile);
         ImageHolder thumbnail=new ImageHolder(thumbnailFile.getName(),is);
         LocalAuth localAuth=new LocalAuth();
-        localAuth.setUsername("新用户");
+        localAuth.setUsername("新用户1");
         localAuth.setPassword("mima");
         PersonInfo personInfo=new PersonInfo();
-        personInfo.setUserId(3L);
+        //personInfo.setUserId(3L);
         personInfo.setEnableStatus(1);
         personInfo.setUserType(1);
+        personInfo.setName("test");
         localAuth.setPersonInfo(personInfo);
         localAuthService.registerLocalAuth(localAuth,thumbnail);
 
